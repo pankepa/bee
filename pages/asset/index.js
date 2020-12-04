@@ -1,6 +1,7 @@
 const APP = getApp()
 const WXAPI = require('apifm-wxapi')
-
+const CONFIG = require('../../config.js')
+const AUTH = require('../../utils/auth')
 // fixed首次打开不显示标题的bug
 APP.configLoadOK = () => {
   
@@ -16,9 +17,19 @@ Page({
     showRechargePop: false
   },
   onLoad: function (options) {
+    this.setData({
+      myBg: wx.getStorageSync('myBg'),
+      version: CONFIG.version
+    })
     this.rechargeRule()
   },
   onShow: function () {
+    AUTH.checkHasLogined().then(isLogined => {
+      if (isLogined) {
+        this.getUserApiInfo()
+        this.getUserAmount()
+      }
+    })
     this.getUserAmount()
   },
   async getUserAmount() {
@@ -30,6 +41,21 @@ Page({
         score: res.data.score,
         growth: res.data.growth
       })
+    }
+  },
+  async getUserApiInfo() {
+    const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    if (res.code == 0) {
+      const _data = {}
+      _data.apiUserInfoMap = res.data
+      // if (this.data.order_hx_uids && this.data.order_hx_uids.indexOf(res.data.base.id) != -1) {
+      //   _data.canHX = true // 具有扫码核销的权限
+      // }
+      // const admin_uids = wx.getStorageSync('admin_uids')
+      // if (admin_uids && admin_uids.indexOf(res.data.base.id) != -1) {
+      //   _data.isAdmin = true
+      // }
+      this.setData(_data)
     }
   },
   async rechargeRule() {
@@ -118,5 +144,15 @@ Page({
         })      
       }
     })
+  },
+  processLogin(e) {
+    if (!e.detail.userInfo) {
+      wx.showToast({
+        title: '已取消',
+        icon: 'none',
+      })
+      return;
+    }
+    AUTH.register(this);
   }
 })

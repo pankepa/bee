@@ -43,22 +43,22 @@
         "text": "点餐"
       },
       {
+        "pagePath": "pages/cart/order",
+        "iconPath": "images/nav/index-off.png",
+        "selectedIconPath": "images/nav/index-on.png",
+        "text": "已点"
+      },
+      {
         "pagePath": "pages/queue/index",
         "iconPath": "images/nav/qh-off.png",
         "selectedIconPath": "images/nav/qh-on.png",
         "text": "取号"
       },
       {
-        "pagePath": "pages/order-details/doing",
-        "iconPath": "images/nav/qc-off.png",
-        "selectedIconPath": "images/nav/qc-on.png",
-        "text": "取餐"
-      },
-      {
-        "pagePath": "pages/my/index",
-        "iconPath": "images/nav/my-off.png",
-        "selectedIconPath": "images/nav/my-on.png",
-        "text": "我的"
+        "pagePath": "pages/asset/index",
+        "iconPath": "images/nav/index-off.png",
+        "selectedIconPath": "images/nav/index-on.png",
+        "text": "会员"
       }
     ]
   },

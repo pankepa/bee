@@ -121,7 +121,10 @@ Page({
       return
     }
     await this.clearCart()
-    wx.redirectTo({
+    // wx.redirectTo({
+    //   url: '/pages/cart/order',
+    // })
+    wx.switchTab({
       url: '/pages/cart/order',
     })
   },

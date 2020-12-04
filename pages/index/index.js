@@ -32,9 +32,9 @@ Page({
 
     // 测试扫码点餐
     // shopId=36,id=111,key=Y6RoIT 进行 url编码，3个值分别为 门店id，餐桌id，餐桌密钥
-    // e = {
-    //   scene: 'shopId%3d36%2cid%3d111%2ckey%3dY6RoIT' 
-    // }
+    e = {
+      scene: 'shopId%3d229%2cid%3d231%2ckey%3dP4CDep' 
+    }
 
     
     if (e && e.scene) {
@@ -98,7 +98,7 @@ Page({
       })
       return
     }
-    wx.hideTabBar()
+    // wx.hideTabBar()
     wx.setStorageSync('uid', res.data.uid)
     wx.setStorageSync('token', res.data.token)
   },
@@ -611,16 +611,18 @@ Page({
     }
   },
   goPay() {
-    if (this.data.scanDining) {
+    // if (this.data.scanDining) {
+      if (true) {
       // 扫码点餐，前往购物车
       wx.navigateTo({
         url: '/pages/cart/index',
       })
-    } else {
-      wx.navigateTo({
-        url: '/pages/pay/index',
-      })
-    }
+    } 
+    // else {
+    //   wx.navigateTo({
+    //     url: '/pages/pay/index',
+    //   })
+    // }
   },
   onShareAppMessage: function() {
     let uid = wx.getStorageSync('uid')
