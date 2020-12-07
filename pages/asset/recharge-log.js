@@ -24,7 +24,9 @@ Page({
       title: '',
     })
     const res = await WXAPI.payLogs({
-      token: wx.getStorageSync('token'),
+      // token: wx.getStorageSync('token'),
+      token: wx.getStorageSync('userToken'),
+      page:1,
       page:1,
       pageSize:500,
       status: 1

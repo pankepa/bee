@@ -26,7 +26,8 @@ Page({
       title: '',
     })
     const res = await WXAPI.orderList({
-      token: wx.getStorageSync('token'),
+      // token: wx.getStorageSync('token'),
+      token: wx.getStorageSync('tableToken'),
       status: 0
     })
     wx.hideLoading({

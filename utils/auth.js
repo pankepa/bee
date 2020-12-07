@@ -32,7 +32,8 @@ function openLoginDialog() {
 
 // 检测登录状态，返回 true / false
 async function checkHasLogined() {
-  const token = wx.getStorageSync('token')
+  // const token = wx.getStorageSync('token')
+  const token = wx.getStorageSync('userToken')
   if (!token) {
     return false
   }
@@ -99,7 +100,8 @@ async function login(page){
           })
           return;
         }
-        wx.setStorageSync('token', res.data.token)
+        // wx.setStorageSync('token', res.data.token)
+        wx.setStorageSync('userToken', res.data.token)
         wx.setStorageSync('uid', res.data.uid)
         if ( page ) {
           page.onShow()

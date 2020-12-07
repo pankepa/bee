@@ -64,7 +64,8 @@ Page({
   },
   async doneShow() {
     let goodsList = [];
-    const token = wx.getStorageSync('token')
+    // const token = wx.getStorageSync('token')
+    const token = wx.getStorageSync('tableToken')
     //立即购买下单
     if ("buyNow" == this.data.orderType) {
       goodsList = wx.getStorageSync('pingtuanGoodsList')
@@ -79,7 +80,7 @@ Page({
       goodsList: goodsList,
       peisongType: this.data.peisongType
     })
-    this.initShippingAddress()
+    // this.initShippingAddress()
   },
 
   onLoad(e) {
@@ -151,7 +152,8 @@ Page({
   },
   createOrder: function (e) {
     var that = this;
-    var loginToken = wx.getStorageSync('token') // 用户登录 token
+    // var loginToken = wx.getStorageSync('token') // 用户登录 token
+    var loginToken = wx.getStorageSync('tableToken')
     var remark = this.data.remark; // 备注信息
     const postData = {
       token: loginToken,
@@ -171,40 +173,40 @@ Page({
       postData.pingtuanOpenId = that.data.pingtuanOpenId
     }
     const extJsonStr = {}
-    if (postData.peisongType == 'zq') {
-      extJsonStr['联系电话'] = this.data.mobile
-      extJsonStr['取餐时间'] = this.data.diningTime
-    } else {
-      extJsonStr['送达时间'] = this.data.diningTime
-    }
+    // if (postData.peisongType == 'zq') {
+    //   extJsonStr['联系电话'] = this.data.mobile
+    //   extJsonStr['取餐时间'] = this.data.diningTime
+    // } else {
+    //   extJsonStr['送达时间'] = this.data.diningTime
+    // }
     postData.extJsonStr = JSON.stringify(extJsonStr)
-    if (e && postData.peisongType == 'kd') {
-      if (!that.data.curAddressData) {
-        wx.hideLoading();
-        wx.showToast({
-          title: '请设置收货地址',
-          icon: 'none'
-        })
-        return;
-      }
-      // 达达配送
-      if (this.data.shopInfo.number && this.data.shopInfo.expressType == 'dada') {
-        postData.dadaShopNo = this.data.shopInfo.number
-        postData.dadaLat = this.data.curAddressData.latitude
-        postData.dadaLng = this.data.curAddressData.longitude
-      }
-      if (postData.peisongType == 'kd') {
-        postData.provinceId = that.data.curAddressData.provinceId;
-        postData.cityId = that.data.curAddressData.cityId;
-        if (that.data.curAddressData.districtId) {
-          postData.districtId = that.data.curAddressData.districtId;
-        }
-        postData.address = that.data.curAddressData.address;
-        postData.linkMan = that.data.curAddressData.linkMan;
-        postData.mobile = that.data.curAddressData.mobile;
-        postData.code = that.data.curAddressData.code;
-      }      
-    }
+    // if (e && postData.peisongType == 'kd') {
+    //   if (!that.data.curAddressData) {
+    //     wx.hideLoading();
+    //     wx.showToast({
+    //       title: '请设置收货地址',
+    //       icon: 'none'
+    //     })
+    //     return;
+    //   }
+    //   // 达达配送
+    //   if (this.data.shopInfo.number && this.data.shopInfo.expressType == 'dada') {
+    //     postData.dadaShopNo = this.data.shopInfo.number
+    //     postData.dadaLat = this.data.curAddressData.latitude
+    //     postData.dadaLng = this.data.curAddressData.longitude
+    //   }
+    //   if (postData.peisongType == 'kd') {
+    //     postData.provinceId = that.data.curAddressData.provinceId;
+    //     postData.cityId = that.data.curAddressData.cityId;
+    //     if (that.data.curAddressData.districtId) {
+    //       postData.districtId = that.data.curAddressData.districtId;
+    //     }
+    //     postData.address = that.data.curAddressData.address;
+    //     postData.linkMan = that.data.curAddressData.linkMan;
+    //     postData.mobile = that.data.curAddressData.mobile;
+    //     postData.code = that.data.curAddressData.code;
+    //   }      
+    // }
     if (that.data.curCoupon) {
       postData.couponId = that.data.curCoupon.id;
     }
@@ -260,7 +262,8 @@ Page({
   },
   async processAfterCreateOrder(res) {
     // 直接弹出支付，取消支付的话，去订单列表
-    const res1 = await WXAPI.userAmount(wx.getStorageSync('token'))
+    // const res1 = await WXAPI.userAmount(wx.getStorageSync('token'))
+    const res1 = await WXAPI.userAmount(wx.getStorageSync('userToken'))
     if (res1.code != 0) {
       wx.showToast({
         title: '无法获取用户资金信息',
@@ -280,19 +283,19 @@ Page({
       wxpay.wxpay('order', money, res.data.id, "/pages/all-orders/index");
     }
   },
-  async initShippingAddress() {
-    const res = await WXAPI.defaultAddress(wx.getStorageSync('token'))
-    if (res.code == 0) {
-      this.setData({
-        curAddressData: res.data.info
-      });
-    } else {
-      this.setData({
-        curAddressData: null
-      });
-    }
-    this.processYunfei();
-  },
+  // async initShippingAddress() {
+  //   const res = await WXAPI.defaultAddress(wx.getStorageSync('token'))
+  //   if (res.code == 0) {
+  //     this.setData({
+  //       curAddressData: res.data.info
+  //     });
+  //   } else {
+  //     this.setData({
+  //       curAddressData: null
+  //     });
+  //   }
+  //   this.processYunfei();
+  // },
   processYunfei() {
     var goodsList = this.data.goodsList
     if (goodsList.length == 0) {
@@ -382,42 +385,43 @@ Page({
     }
     AUTH.register(this);
   },
-  async getPhoneNumber(e) {
-    if (!e.detail.errMsg || e.detail.errMsg != "getPhoneNumber:ok") {
-      wx.showToast({
-        title: e.detail.errMsg,
-        icon: 'none'
-      })
-      return;
-    }
-    const res = await WXAPI.bindMobileWxapp(wx.getStorageSync('token'), this.data.code, e.detail.encryptedData, e.detail.iv)
-    AUTH.wxaCode().then(code => {
-      this.data.code = code
-    })
-    if (res.code === 10002) {
-      wx.showToast({
-        title: '请先登陆',
-        icon: 'none'
-      })
-      return
-    }
-    if (res.code == 0) {
-      wx.showToast({
-        title: '读取成功',
-        icon: 'success'
-      })
-      this.setData({
-        mobile: res.data
-      })
-    } else {
-      wx.showToast({
-        title: res.msg,
-        icon: 'none'
-      })
-    }
-  },
+  // async getPhoneNumber(e) {
+  //   if (!e.detail.errMsg || e.detail.errMsg != "getPhoneNumber:ok") {
+  //     wx.showToast({
+  //       title: e.detail.errMsg,
+  //       icon: 'none'
+  //     })
+  //     return;
+  //   }
+  //   const res = await WXAPI.bindMobileWxapp(wx.getStorageSync('token'), this.data.code, e.detail.encryptedData, e.detail.iv)
+  //   AUTH.wxaCode().then(code => {
+  //     this.data.code = code
+  //   })
+  //   if (res.code === 10002) {
+  //     wx.showToast({
+  //       title: '请先登陆',
+  //       icon: 'none'
+  //     })
+  //     return
+  //   }
+  //   if (res.code == 0) {
+  //     wx.showToast({
+  //       title: '读取成功',
+  //       icon: 'success'
+  //     })
+  //     this.setData({
+  //       mobile: res.data
+  //     })
+  //   } else {
+  //     wx.showToast({
+  //       title: res.msg,
+  //       icon: 'none'
+  //     })
+  //   }
+  // },
   async getUserApiInfo() {
-    const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    // const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    const res = await WXAPI.userDetail(wx.getStorageSync('userToken'))
     if (res.code == 0) {
       this.setData({
         mobile: res.data.base.mobile

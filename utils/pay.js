@@ -6,25 +6,27 @@ const WXAPI = require('apifm-wxapi')
  */
 function wxpay(type, money, orderId, redirectUrl, data) {
   const postData = {
-    token: wx.getStorageSync('token'),
+    // token: wx.getStorageSync('token'),
+    token: wx.getStorageSync('userToken'),
     money: money,
     remark: "在线充值",
   }
   if (type === 'order') {
+    postData.token = wx.getStorageSync('tableToken')
     postData.remark = "支付订单 ：" + orderId;
     postData.nextAction = {
       type: 0,
       id: orderId
     };
   }
-  if (type === 'paybill') {
-    postData.remark = "优惠买单 ：" + data.money;
-    postData.nextAction = {
-      type: 4,
-      uid: wx.getStorageSync('uid'),
-      money: data.money
-    };
-  }
+  // if (type === 'paybill') {
+  //   postData.remark = "优惠买单 ：" + data.money;
+  //   postData.nextAction = {
+  //     type: 4,
+  //     uid: wx.getStorageSync('uid'),
+  //     money: data.money
+  //   };
+  // }
   postData.payName = postData.remark;
   if (postData.nextAction) {
     postData.nextAction = JSON.stringify(postData.nextAction);  

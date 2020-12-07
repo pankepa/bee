@@ -58,11 +58,11 @@ Page({
       this.data.share_goods_id = e.share_goods_id
       this._showGoodsDetailPOP(e.share_goods_id)
     }
-    if (e.share_pingtuan_open_id) {
-      this.data.share_pingtuan_open_id = e.share_pingtuan_open_id
-    } else {
-      this._showCouponPop()
-    }
+    // if (e.share_pingtuan_open_id) {
+    //   this.data.share_pingtuan_open_id = e.share_pingtuan_open_id
+    // } else {
+    //   this._showCouponPop()
+    // }
     // 设置标题
     const mallName = wx.getStorageSync('mallName')
     if (mallName) {
@@ -100,7 +100,8 @@ Page({
     }
     // wx.hideTabBar()
     wx.setStorageSync('uid', res.data.uid)
-    wx.setStorageSync('token', res.data.token)
+    // wx.setStorageSync('token', res.data.token)
+    wx.setStorageSync('tableToken', res.data.token)
   },
   getshopInfo(){
     wx.getLocation({
@@ -134,20 +135,6 @@ Page({
       })
       wx.setStorageSync('shopInfo', res.data[0])
     } 
-  },
-  async _showCouponPop() {
-    // 检测是否需要弹出优惠券的福袋
-    const res = await WXAPI.coupons({
-      token: wx.getStorageSync('token')
-    })
-    if (res.code == 0) {
-      this.data.showCouponPop = true
-    } else {
-      this.data.showCouponPop = false
-    }
-    this.setData({
-      showCouponPop: this.data.showCouponPop
-    })
   },
   changePeisongType(e) {
     const peisongType = e.currentTarget.dataset.type
@@ -218,7 +205,8 @@ Page({
     this.getGoodsList()
   },
   async shippingCarInfo() {
-    const res = await WXAPI.shippingCarInfo(wx.getStorageSync('token'))
+    // const res = await WXAPI.shippingCarInfo(wx.getStorageSync('token'))
+    const res = await WXAPI.shippingCarInfo(wx.getStorageSync('tableToken'))
     if (res.code == 700) {
       this.setData({
         shippingCarInfo: null,
@@ -254,7 +242,8 @@ Page({
     })
   },
   async addCart1(e) {
-    const token = wx.getStorageSync('token')
+    // const token = wx.getStorageSync('token')
+    const token = wx.getStorageSync('tableToken')
     const index = e.currentTarget.dataset.idx
     const item = this.data.goods[index]
     wx.showLoading({
@@ -397,7 +386,8 @@ Page({
     return canSubmit
   },
   async addCart2() {
-    const token = wx.getStorageSync('token')
+    // const token = wx.getStorageSync('token')
+    const token = wx.getStorageSync('tableToken')
     const curGoodsMap = this.data.curGoodsMap
     const canSubmit = this.skuCanSubmit()
     const additionCanSubmit = this.additionCanSubmit()
@@ -454,7 +444,8 @@ Page({
     this.shippingCarInfo()
   },
   async cartStepChange(e) {
-    const token = wx.getStorageSync('token')
+    // const token = wx.getStorageSync('token')
+    const token = wx.getStorageSync('tableToken')
     const index = e.currentTarget.dataset.idx
     const item = this.data.shippingCarInfo.items[index]
     if (e.detail < 1) {
@@ -508,7 +499,8 @@ Page({
     wx.showLoading({
       title: '',
     })
-    const res = await WXAPI.shippingCarInfoRemoveAll(wx.getStorageSync('token'))
+    // const res = await WXAPI.shippingCarInfoRemoveAll(wx.getStorageSync('token'))
+    const res = await WXAPI.shippingCarInfoRemoveAll(wx.getStorageSync('tableToken'))
     wx.hideLoading()
     if (res.code != 0) {
       wx.showToast({
@@ -526,7 +518,6 @@ Page({
     this.goodsAddition(goodsId)
   },
   async _showGoodsDetailPOP(goodsId) {
-    const token = wx.getStorageSync('token')
     const res = await WXAPI.goodsDetail(goodsId)
     if (res.code != 0) {
       wx.showToast({
@@ -543,62 +534,8 @@ Page({
       pingtuan_open_id: null,
       lijipingtuanbuy: false
     }
-    if (res.data.basicInfo.pingtuan) {
-      _data.showPingtuanPop = true
-      _data.showGoodsDetailPOP = false
-      // 获取拼团设置
-      const resPintuanSet = await WXAPI.pingtuanSet(goodsId)
-      if (resPintuanSet.code != 0) {
-        _data.showPingtuanPop = false
-        _data.showGoodsDetailPOP = true
-      } else {
-        _data.pintuanSet = resPintuanSet.data
-        // 是否是别人分享的团进来的
-        if (this.data.share_goods_id && this.data.share_goods_id == goodsId && this.data.share_pingtuan_open_id) {
-          // 分享进来的
-          _data.pingtuan_open_id = this.data.share_pingtuan_open_id
-        } else {
-          // 不是通过分享进来的
-          const resPintuanOpen = await WXAPI.pingtuanOpen(token, goodsId)
-          if (resPintuanOpen.code == 2000) {
-            AUTH.openLoginDialog()
-            return
-          }
-          if (resPintuanOpen.code != 0) {
-            wx.showToast({
-              title: resPintuanOpen.msg,
-              icon: 'none'
-            })
-            return
-          }
-          _data.pingtuan_open_id = resPintuanOpen.data.id
-        }
-        // 读取拼团记录
-        const helpUsers = []
-        for (let i = 0; i < _data.pintuanSet.numberOrder; i++) {
-          helpUsers[i] = '/images/who.png'
-        }
-        _data.helpNumers = 0
-        const resPingtuanJoinUsers = await WXAPI.pingtuanJoinUsers(_data.pingtuan_open_id)
-        if (resPingtuanJoinUsers.code == 700 && this.data.share_pingtuan_open_id) {
-          this.data.share_pingtuan_open_id = null
-          this._showGoodsDetailPOP(goodsId)
-          return
-        }
-        if (resPingtuanJoinUsers.code == 0) {
-          _data.helpNumers = resPingtuanJoinUsers.data.length
-          resPingtuanJoinUsers.data.forEach((ele, index) => {
-            if (_data.pintuanSet.numberOrder > index) {
-              helpUsers.splice(index, 1, ele.apiExtUserHelp.avatarUrl)
-            }
-          })
-        }
-        _data.helpUsers = helpUsers
-      }
-    } else {
-      _data.showPingtuanPop = false
-      _data.showGoodsDetailPOP = true
-    }
+    _data.showPingtuanPop = false
+    _data.showGoodsDetailPOP = true
     this.setData(_data)
   },
   hideGoodsDetailPOP() {

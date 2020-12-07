@@ -24,7 +24,8 @@ Page({
     wx.showLoading({
       title: '',
     })
-    const res = await WXAPI.shippingCarInfo(wx.getStorageSync('token'))
+    // const res = await WXAPI.shippingCarInfo(wx.getStorageSync('token'))
+    const res = await WXAPI.shippingCarInfo(wx.getStorageSync('tableToken'))
     wx.hideLoading({
       success: (res) => {},
     })
@@ -40,7 +41,8 @@ Page({
     }
   },
   async cartStepChange(e) {
-    const token = wx.getStorageSync('token')
+    // const token = wx.getStorageSync('token')
+    const token = wx.getStorageSync('tableToken')
     const index = e.currentTarget.dataset.idx
     const item = this.data.shippingCarInfo.items[index]
     if (e.detail < item.minBuyNumber) {
@@ -79,7 +81,8 @@ Page({
     wx.showLoading({
       title: '',
     })
-    const res = await WXAPI.shippingCarInfoRemoveAll(wx.getStorageSync('token'))
+    // const res = await WXAPI.shippingCarInfoRemoveAll(wx.getStorageSync('token'))
+    const res = await WXAPI.shippingCarInfoRemoveAll(wx.getStorageSync('tableToken'))
     wx.hideLoading()
     if (res.code != 0) {
       wx.showToast({
@@ -109,7 +112,8 @@ Page({
       title: '',
     })
     const res = await WXAPI.cyTableAddOrder({
-      token: wx.getStorageSync('token'),
+      // token: wx.getStorageSync('token'),
+      token: wx.getStorageSync('tableToken'),
       goodsJsonStr: JSON.stringify(goodsJsonStr)
     })
     wx.hideLoading()

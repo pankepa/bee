@@ -30,7 +30,8 @@ Page({
     }
   },
   async queuingMy() {
-    const res = await WXAPI.queuingMy(wx.getStorageSync('token'))
+    // const res = await WXAPI.queuingMy(wx.getStorageSync('token'))
+    const res = await WXAPI.queuingMy(wx.getStorageSync('userToken'))
     if (res.code == 0) {
       const mylist = []
       res.data.forEach(ele => {
@@ -59,7 +60,8 @@ Page({
     wx.showLoading({
       title: '',
     })
-    const res = await WXAPI.queuingGet(wx.getStorageSync('token'), queueType.id)
+    // const res = await WXAPI.queuingGet(wx.getStorageSync('token'), queueType.id)
+    const res = await WXAPI.queuingGet(wx.getStorageSync('userToken'), queueType.id)
     wx.hideLoading({
       success: (res) => {},
     })

@@ -33,7 +33,8 @@ Page({
     this.getUserAmount()
   },
   async getUserAmount() {
-    const res = await WXAPI.userAmount(wx.getStorageSync('token'))
+    // const res = await WXAPI.userAmount(wx.getStorageSync('token'))
+    const res = await WXAPI.userAmount(wx.getStorageSync('userToken'))
     if (res.code == 0) {
       this.setData({
         balance: res.data.balance.toFixed(2),
@@ -44,7 +45,8 @@ Page({
     }
   },
   async getUserApiInfo() {
-    const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    // const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    const res = await WXAPI.userDetail(wx.getStorageSync('userToken'))
     if (res.code == 0) {
       const _data = {}
       _data.apiUserInfoMap = res.data
@@ -105,7 +107,8 @@ Page({
   wxpay(money) {
     const _this = this
     const postData = {
-      token: wx.getStorageSync('token'),
+      // token: wx.getStorageSync('token'),
+      token: wx.getStorageSync('userToken'),
       money: money,
       payName: "在线充值",
       remark: "在线充值",
