@@ -13,29 +13,17 @@
 			<van-button type="default" block open-type="getUserInfo" bind:getuserinfo="processLogin">立即登录</van-button>
 		</view>	
 		<view wx:if="{{apiUserInfoMap}}" class="coupon-box">
-			<!-- <view class="coupon" bindtap="goCoupons">
-				<view class="num">{{couponStatistics.canUse}}</view>
-				<view class="title1">优惠券</view>
-			</view> -->
-			<view class="balance-box" bindtap="goBalance">
+			<view class="balance-box">
 				<view class="amount-box">
 					<view class="amount1">¥</view>
 					<view class="amount2">{{balance}}</view>
 				</view>
 				<view class="amount">余额</view>
 			</view>
-			<!-- <view class="coupon" bindtap="goScorelog">
-				<view class="num">{{score}}</view>
-				<view class="title1">积分</view>
-			</view> -->
 		</view>
 	</view>
 </view>
 
-<!-- <view class="balance">
-  <view class="t">可用余额</view>
-  <view class="amount"><text>¥</text>{{balance}}</view>
-</view> -->
 <van-divider contentPosition="center">余额充值</van-divider>
 <view class="persion-num">
   <view wx:for="{{rechargeSendRules}}" wx:key="id" class="item {{ruleSelIndex == index ? 'active' : ''}}" data-idx="{{index}}" bindtap="changePersionNum">
