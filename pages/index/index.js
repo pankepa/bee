@@ -154,7 +154,7 @@ Page({
     }
     res.data.forEach(ele => {
       if (!ele.characteristic) {
-        ele.characteristic = '清凉一夏'
+        ele.characteristic = ''
       }
     })
     this.setData({
