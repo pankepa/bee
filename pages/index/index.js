@@ -27,13 +27,10 @@ Page({
     // 扫码点餐
     const id = wx.getStorageSync('id')
     const key = wx.getStorageSync('key')
-    console.log(id)
-    console.log(key)
     const scanDining = {
       id: id,
       key: key
     }
-    console.log(scanDining)
     wx.setStorageSync('scanDining', scanDining)
     this.setData({
       scanDining: scanDining

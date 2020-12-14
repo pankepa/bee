@@ -26,7 +26,7 @@
     <van-cell title="应付金额" value="{{ orderInfo.amountReal }}" />
   </van-cell-group>
   <view class="bottom"></view>
-  <van-submit-bar price="{{ orderInfo.amountReal*100 }}" button-text="结账买单" bindtap="goPayOrder" />
+  <van-submit-bar price="{{ orderInfo.amountReal*100 }}" button-text="结账买单" bindtap="showConfrimModal" />
 </block>
 <view wx:if="{{ paySuccess }}" class="paySuccess">
   <van-icon name="checked" size="260rpx" color="#07c160" />

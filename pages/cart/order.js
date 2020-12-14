@@ -99,4 +99,16 @@ Page({
       }
     })
   },
+  async showConfrimModal() {
+    const _this = this
+    wx.showModal({
+      title: "确认",
+      content: "用餐结束，我来买单",
+      success: function(res) {
+        if (res.confirm) {
+          _this.goPayOrder()
+        }
+      }
+    })
+  },
 })
