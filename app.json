@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/scan/index",
     "pages/index/index",
     "pages/pay/index",
     "pages/asset/index",
@@ -17,31 +18,31 @@
   },
   "tabBar": {
     "color": "#6e6d6b",
-    "selectedColor": "#e64340",
+    "selectedColor": "#2c8bb4",
     "backgroundColor": "#fff",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "images/nav/index-off.png",
-        "selectedIconPath": "images/nav/index-on.png",
+        "iconPath": "images/nav/diancan.png",
+        "selectedIconPath": "images/nav/diancan.png",
         "text": "点餐"
       },
       {
         "pagePath": "pages/cart/order",
-        "iconPath": "images/nav/index-off.png",
-        "selectedIconPath": "images/nav/index-on.png",
+        "iconPath": "images/nav/yidian.png",
+        "selectedIconPath": "images/nav/yidian.png",
         "text": "已点"
       },
       {
         "pagePath": "pages/queue/index",
-        "iconPath": "images/nav/qh-off.png",
-        "selectedIconPath": "images/nav/qh-on.png",
+        "iconPath": "images/nav/paidui.png",
+        "selectedIconPath": "images/nav/paidui.png",
         "text": "取号"
       },
       {
         "pagePath": "pages/asset/index",
-        "iconPath": "images/nav/index-off.png",
-        "selectedIconPath": "images/nav/index-on.png",
+        "iconPath": "images/nav/huiyuan.png",
+        "selectedIconPath": "images/nav/huiyuan.png",
         "text": "会员"
       }
     ]

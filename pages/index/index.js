@@ -22,47 +22,23 @@ Page({
     share_pingtuan_open_id: undefined,
     lijipingtuanbuy: false,
     pingtuan_open_id: undefined
-  },  
-  onLoad: function (e) {
-    // 测试拼团入口
-    // e = {
-    //   share_goods_id: 521055,
-    //   share_pingtuan_open_id: 11267
-    // }
-
-    // 测试扫码点餐
-    // shopId=36,id=111,key=Y6RoIT 进行 url编码，3个值分别为 门店id，餐桌id，餐桌密钥
-    e = {
-      scene: 'shopId%3d229%2cid%3d231%2ckey%3dP4CDep' 
+  },
+  onLoad: function () {
+    // 扫码点餐
+    const id = wx.getStorageSync('id')
+    const key = wx.getStorageSync('key')
+    console.log(id)
+    console.log(key)
+    const scanDining = {
+      id: id,
+      key: key
     }
-
-    
-    if (e && e.scene) {
-      const scene = decodeURIComponent(e.scene) // 处理扫码进商品详情页面的逻辑
-      if (scene && scene.split(',').length == 3) {
-        // 扫码点餐
-        const scanDining = {}
-        scene.split(',').forEach(ele => {
-          scanDining[ele.split('=')[0]] = ele.split('=')[1]
-        })
-        wx.setStorageSync('scanDining', scanDining)
-        this.setData({
-          scanDining: scanDining
-        })
-        this.cyTableToken(scanDining.id, scanDining.key)
-      } else {
-        wx.removeStorageSync('scanDining')
-      }
-    }
-    if (e.share_goods_id) {
-      this.data.share_goods_id = e.share_goods_id
-      this._showGoodsDetailPOP(e.share_goods_id)
-    }
-    // if (e.share_pingtuan_open_id) {
-    //   this.data.share_pingtuan_open_id = e.share_pingtuan_open_id
-    // } else {
-    //   this._showCouponPop()
-    // }
+    console.log(scanDining)
+    wx.setStorageSync('scanDining', scanDining)
+    this.setData({
+      scanDining: scanDining
+    })
+    this.cyTableToken(scanDining.id, scanDining.key)
     // 设置标题
     const mallName = wx.getStorageSync('mallName')
     if (mallName) {
@@ -70,22 +46,13 @@ Page({
         title: mallName
       })
     }
-    // 读取默认配送方式
-    let peisongType = wx.getStorageSync('peisongType')
-    if (!peisongType) {
-      peisongType = 'zq'
-      wx.setStorageSync('peisongType', peisongType)
-    }
-    this.setData({
-      peisongType
-    })
     // 读取最近的门店数据
     this.getshopInfo()
-    this.categories()    
+    this.categories()
     this.noticeLastOne()
     this.banners()
   },
-  onShow: function(){
+  onShow: function () {
     this.shippingCarInfo()
   },
   async cyTableToken(tableId, key) {
@@ -103,7 +70,7 @@ Page({
     // wx.setStorageSync('token', res.data.token)
     wx.setStorageSync('tableToken', res.data.token)
   },
-  getshopInfo(){
+  getshopInfo() {
     wx.getLocation({
       type: 'wgs84', //wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
       success: (res) => {
@@ -111,13 +78,13 @@ Page({
         this.data.latitude = res.latitude
         this.data.longitude = res.longitude
         this.fetchShops(res.latitude, res.longitude, '')
-      },      
-      fail(e){
+      },
+      fail(e) {
         AUTH.checkAndAuthorize('scope.userLocation')
       }
     })
   },
-  async fetchShops(latitude, longitude, kw){
+  async fetchShops(latitude, longitude, kw) {
     const res = await WXAPI.fetchShops({
       curlatitude: latitude,
       curlongitude: longitude,
@@ -134,7 +101,7 @@ Page({
         shopIsOpened: this.checkIsOpened(res.data[0].openingHours)
       })
       wx.setStorageSync('shopInfo', res.data[0])
-    } 
+    }
   },
   changePeisongType(e) {
     const peisongType = e.currentTarget.dataset.type
@@ -155,7 +122,7 @@ Page({
         icon: 'none'
       })
       return
-    }    
+    }
     this.setData({
       categories: res.data,
       categorySelected: res.data[0]
@@ -316,7 +283,7 @@ Page({
       this.data.goodsAddition.forEach(big => {
         big.items.forEach(small => {
           if (small.active) {
-            price = (price*100 + small.price*100) / 100
+            price = (price * 100 + small.price * 100) / 100
           }
         })
       })
@@ -376,7 +343,9 @@ Page({
     if (curGoodsMap.basicInfo.hasAddition) {
       this.data.goodsAddition.forEach(ele => {
         if (ele.required) {
-          const a = ele.items.find(item => {return item.active})
+          const a = ele.items.find(item => {
+            return item.active
+          })
           if (!a) {
             canSubmit = false
           }
@@ -549,26 +518,26 @@ Page({
   },
   goPay() {
     // if (this.data.scanDining) {
-      if (true) {
+    if (true) {
       // 扫码点餐，前往购物车
       wx.navigateTo({
         url: '/pages/cart/index',
       })
-    } 
+    }
     // else {
     //   wx.navigateTo({
     //     url: '/pages/pay/index',
     //   })
     // }
   },
-  onShareAppMessage: function() {
+  onShareAppMessage: function () {
     let uid = wx.getStorageSync('uid')
     if (!uid) {
       uid = ''
     }
     let path = '/pages/index/index?inviter_id=' + uid
     if (this.data.pingtuan_open_id) {
-      path = path + '&share_goods_id=' +  this.data.curGoodsMap.basicInfo.id + '&share_pingtuan_open_id=' +  this.data.pingtuan_open_id
+      path = path + '&share_goods_id=' + this.data.curGoodsMap.basicInfo.id + '&share_pingtuan_open_id=' + this.data.pingtuan_open_id
     }
     return {
       title: '"' + wx.getStorageSync('mallName') + '" ' + wx.getStorageSync('share_profile'),
@@ -629,21 +598,23 @@ Page({
     const date = new Date();
     const startTime = openingHours.split('-')[0]
     const endTime = openingHours.split('-')[1]
-    const dangqian=date.toLocaleTimeString('chinese',{hour12:false})
-    
-    const dq=dangqian.split(":")
+    const dangqian = date.toLocaleTimeString('chinese', {
+      hour12: false
+    })
+
+    const dq = dangqian.split(":")
     const a = startTime.split(":")
     const b = endTime.split(":")
 
-    const dqdq=date.setHours(dq[0],dq[1])
-    const aa=date.setHours(a[0],a[1])
-    const bb=date.setHours(b[0],b[1])
+    const dqdq = date.setHours(dq[0], dq[1])
+    const aa = date.setHours(a[0], a[1])
+    const bb = date.setHours(b[0], b[1])
 
-    if (a[0]*1 > b[0]*1) {
+    if (a[0] * 1 > b[0] * 1) {
       // 说明是到第二天
       return !this.checkIsOpened(endTime + '-' + startTime)
     }
-    return aa<dqdq && dqdq<bb
+    return aa < dqdq && dqdq < bb
   },
   yuanjiagoumai() {
     this.setData({
@@ -727,7 +698,7 @@ Page({
     this.data.share_pingtuan_open_id = null
     this._showGoodsDetailPOP(this.data.curGoodsMap.basicInfo.id)
   },
-  async goodsAddition(goodsId){
+  async goodsAddition(goodsId) {
     const res = await WXAPI.goodsAddition(goodsId)
     if (res.code == 0) {
       this.setData({

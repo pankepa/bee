@@ -1,0 +1,4 @@
+<!--pages/scan/index.wxml-->
+<view class="container">
+  <button class="scan-button" bindtap="onScan">扫描桌码</button>
+</view>
